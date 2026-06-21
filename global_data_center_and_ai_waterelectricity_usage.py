@@ -18,6 +18,7 @@ from sklearn.linear_model import LinearRegression
 from google.colab import files
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (mean_absolute_error, mean_squared_error, r2_score)
+from sklearn.ensemble import RandomForestRegressor
 
 """# 2. Download e carregamento dos dados"""
 
@@ -137,3 +138,42 @@ plt.title("Regressão linear: Real vs Previsto")
 plt.legend()
 plt.grid(True)
 plt.show()
+
+"""# 7. Random Forest
+
+## 7.1 Treinamento e avaliação
+"""
+
+resultados = []
+
+for n in [10, 50, 100]:
+  modelo_rf = RandomForestRegressor(n_estimators = n)
+
+  inicio_treino_rf = time.time()
+
+  modelo_rf.fit(X_train, y_train)
+
+  fim_treino_rf = time.time()
+
+  tempo_treino_rf = fim_treino_rf - inicio_treino_rf
+
+  #avaliacao
+  inicio_predicao_rf = time.time()
+
+  y_pred_val_rf = modelo_rf.predict(X_test)
+
+  fim_predicao_rf = time.time()
+
+  tempo_pred_rf = fim_predicao_rf - inicio_predicao_rf
+
+  mae_rf = mean_absolute_error(y_test, y_pred_val_rf)
+
+  rmse_rf = mean_squared_error(y_test, y_pred_val_rf) ** 0.5
+
+  r2_rf = r2_score(y_test, y_pred_val_rf)
+
+  resultados.append([n, tempo_treino_rf, tempo_pred_rf, mae_rf, rmse_rf, r2_rf])
+
+"""### 7.1.1. Resultados"""
+
+pd.DataFrame(resultados, columns=['n_estimators', 'tempo_treino', 'tempo_pred', 'mae_rf', 'rmse_rf', 'r2_rf'])
