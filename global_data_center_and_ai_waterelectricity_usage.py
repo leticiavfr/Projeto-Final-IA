@@ -160,20 +160,85 @@ for n in [10, 50, 100]:
   #avaliacao
   inicio_predicao_rf = time.time()
 
-  y_pred_val_rf = modelo_rf.predict(X_test)
+  y_pred_val_rf = modelo_rf.predict(X_val)
 
   fim_predicao_rf = time.time()
 
   tempo_pred_rf = fim_predicao_rf - inicio_predicao_rf
 
-  mae_rf = mean_absolute_error(y_test, y_pred_val_rf)
+  mae_rf = mean_absolute_error(y_val, y_pred_val_rf)
 
-  rmse_rf = mean_squared_error(y_test, y_pred_val_rf) ** 0.5
+  rmse_rf = mean_squared_error(y_val, y_pred_val_rf) ** 0.5
 
-  r2_rf = r2_score(y_test, y_pred_val_rf)
+  r2_rf = r2_score(y_val, y_pred_val_rf)
 
   resultados.append([n, tempo_treino_rf, tempo_pred_rf, mae_rf, rmse_rf, r2_rf])
 
 """### 7.1.1. Resultados"""
 
 pd.DataFrame(resultados, columns=['n_estimators', 'tempo_treino', 'tempo_pred', 'mae_rf', 'rmse_rf', 'r2_rf'])
+
+"""#### 7.1.1.1. Gráfico
+
+"""
+
+plt.figure(figsize=(8,6))
+
+plt.scatter(y_val, y_pred_val_rf, alpha=0.4, color='blue', label='Valores Previstos')
+
+min_val = min(y_test.min(), y_pred_val_rf.min())
+max_val = max(y_test.max(), y_pred_val_rf.max())
+plt.plot([min_val, max_val], [min_val, max_val], color='red', label='Previsão Perfeita')
+
+plt.xlabel("Valor real")
+plt.ylabel("Valor previsto")
+
+plt.title("Random Forest Regression: Real vs Previsto")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+"""# 8. Comparação entre LR e RF
+
+## 8.1. Tabela de métricas
+"""
+
+comparacao = pd.DataFrame({
+    'Modelo': [
+        'Regressão Linear',
+        'Random Forest'
+    ],
+    'MAE': [
+        mae_lr,
+        mae_rf
+    ],
+    'RMSE': [
+        rmse_lr,
+        rmse_rf
+    ],
+    'R²': [
+        r2_lr,
+        r2_rf
+    ],
+    'Tempo de treino (s)': [
+        tempo_treino_lr,
+        tempo_treino_rf
+    ],
+    'Tempo de predição (s)': [
+        tempo_pred_lr,
+        tempo_pred_rf
+    ]
+})
+
+comparacao
+
+"""## 8.2. Gráfico de barras da métrica R²"""
+
+plt.bar(
+    comparacao['Modelo'],
+    comparacao['R²']
+)
+
+plt.ylabel("R²")
+plt.title("Comparação dos Modelos")
+plt.show()
