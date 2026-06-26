@@ -146,7 +146,7 @@ plt.show()
 
 resultados = []
 
-for n in [10, 50, 100]:
+for n in [10, 50, 100, 150]:
   modelo_rf = RandomForestRegressor(n_estimators = n)
 
   inicio_treino_rf = time.time()
@@ -196,6 +196,36 @@ plt.ylabel("Valor previsto")
 plt.title("Random Forest Regression: Real vs Previsto")
 plt.legend()
 plt.grid(True)
+plt.show()
+
+"""#### 7.1.1.2. Cálculo de importâncias"""
+
+importancias = modelo_rf.feature_importances_
+
+df_importancias = pd.DataFrame({
+    'Variavel': X.columns,
+    'Importancia': importancias
+})
+
+df_importancias = df_importancias.sort_values(by='Importancia', ascending=False)
+
+df_importancias.head(5)
+
+top5 = df_importancias.head(5)
+
+plt.figure(figsize=(10,6))
+
+plt.barh(
+    top5['Variavel'],
+    top5['Importancia']
+)
+
+plt.xlabel('Importância')
+plt.ylabel('Variável')
+plt.title('Top 5 Variáveis Mais Importantes')
+
+plt.gca().invert_yaxis()
+
 plt.show()
 
 """# 8. Comparação entre LR e RF
