@@ -300,3 +300,22 @@ plt.ylabel("R² médio")
 plt.title("Comparação dos Modelos — média de 30 sementes")
 plt.tight_layout()
 plt.show()
+
+"""## 6.3 Gráfico — Real vs Previsto"""
+
+fig, ax = plt.subplots(figsize=(10, 7))
+
+ax.scatter(y_val, y_pred_val_lr, alpha=0.4, color='blue', label='Regressão Linear')
+ax.scatter(y_val, y_pred_val_rf, alpha=0.4, color='green', label='Random Forest')
+
+min_val = min(y_val.min(), y_pred_val_lr.min(), y_pred_val_rf.min())
+max_val = max(y_val.max(), y_pred_val_lr.max(), y_pred_val_rf.max())
+ax.plot([min_val, max_val], [min_val, max_val], color='red', linewidth=1.5, label='Previsão Perfeita')
+
+ax.set_xlabel("Valor real")
+ax.set_ylabel("Valor previsto")
+ax.set_title(f"Real vs Previsto — Regressão Linear e Random Forest (semente {sementes[-1]})")
+ax.legend()
+ax.grid(True)
+plt.tight_layout()
+plt.show()
